@@ -8,7 +8,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 const config = {
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/e2e-zk-ecdsa/',
+  baseUrl: '/',
   // Usually your repo name.
   deploymentBranch: 'gh-pages',
   favicon: 'img/anonklub.ico',
@@ -20,13 +20,9 @@ const config = {
     defaultLocale: 'en',
     locales: ['en'],
   },
-  // The branch that GitHub pages will deploy from.
-
   onBrokenLinks: 'throw',
-
-  onBrokenMarkdownLinks: 'warn', // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'privacy-scaling-explorations',
+  onBrokenMarkdownLinks: 'warn',
+  organizationName: 'anonklub',
   presets: [
     [
       'classic',
@@ -35,8 +31,7 @@ const config = {
         docs: {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/privacy-scaling-explorations/e2e-zk-ecdsa/edit/main/docs',
+          editUrl: 'https://github.com/anonklub/docs/edit/main/docs',
           sidebarPath: require.resolve('./sidebars.js'),
         },
         theme: {
@@ -44,9 +39,10 @@ const config = {
         },
       },
     ],
-  ], // Usually your GitHub org/user name.
-  projectName: 'e2e-zk-ecdsa',
-  tagline: 'Anonymous proof of membership',
+  ],
+  // Usually your GitHub org/username.
+  projectName: 'anonklub',
+  tagline: 'Anonymous Proof of Ethereum Address Ownership',
 
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
@@ -69,7 +65,7 @@ const config = {
           {
             items: [
               {
-                href: 'https://github.com/privacy-scaling-explorations/e2e-zk-ecdsa',
+                href: 'https://github.com/anonklub',
                 label: 'GitHub',
               },
             ],
@@ -115,16 +111,16 @@ const config = {
             position: 'left',
           },
           {
-            href: 'https://github.com/privacy-scaling-explorations/e2e-zk-ecdsa',
+            href: 'https://github.com/anonklub',
             label: 'GitHub',
             position: 'right',
           },
         ],
         logo: {
-          alt: 'ECDSA Groups Logo',
+          alt: 'Anonklub Logo',
           src: 'img/anonklub.svg',
         },
-        title: 'Anon Klub',
+        title: 'Anonklub',
       },
       prism: {
         darkTheme: darkCodeTheme,
@@ -132,9 +128,9 @@ const config = {
       },
     },
 
-  title: 'Anon Klub',
+  title: 'Anonklub',
   // Set the production url of your site here
-  url: 'https://privacy-scaling-explorations.github.io',
+  url: 'https://anonklub.github.io',
 }
 
 module.exports = config
