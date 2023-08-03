@@ -10,7 +10,7 @@ const config = {
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
   // Usually your repo name.
-  deploymentBranch: 'gh-pages',
+  deploymentBranch: 'deploy',
   favicon: 'img/favicon.ico',
 
   // Even if you don't use internalization, you can use this field to set useful
