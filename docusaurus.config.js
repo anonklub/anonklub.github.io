@@ -40,8 +40,7 @@ const config = {
       },
     ],
   ],
-  // Usually your GitHub org/username.
-  projectName: 'anonklub',
+  projectName: 'anonklub.github.io',
   tagline: 'Anonymous Proof of Ethereum Address Ownership',
 
   themeConfig:
