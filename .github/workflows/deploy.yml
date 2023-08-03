@@ -1,4 +1,4 @@
-name: Deploy Docusaurus
+name: Deploy
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ on:
         '.*ignore',
         'README.md',
         '.prettier*',
-        '.github/workflows/static-analysis',
+        '.github/workflows/static-analysis.yml',
         'tsconfig.json',
       ]
 
