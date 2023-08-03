@@ -34,6 +34,9 @@ devDependencies:
   '@docusaurus/types':
     specifier: ^2.4.1
     version: 2.4.1(react-dom@17.0.2)(react@17.0.2)
+  '@sripwoud/prettier-config':
+    specifier: ^1.0.2
+    version: 1.0.2(prettier@2.8.8)
   '@tsconfig/docusaurus':
     specifier: ^1.0.5
     version: 1.0.5
@@ -2746,6 +2749,15 @@ packages:
       p-map: 4.0.0
       webpack-sources: 3.2.3
     dev: false
+
+  /@sripwoud/prettier-config@1.0.2(prettier@2.8.8):
+    resolution: {integrity: sha512-78c5vCt1+pVnNEwia7+5/kQck3Evt+805PQHjg5RVdqzKfYBuuQb7lsAX29NEn/jLYZg1VvZuh6GpFmNX6ClXw==}
+    requiresBuild: true
+    peerDependencies:
+      prettier: ^2.8.1
+    dependencies:
+      prettier: 2.8.8
+    dev: true
 
   /@svgr/babel-plugin-add-jsx-attribute@6.5.1(@babel/core@7.22.9):
     resolution: {integrity: sha512-9PYGcXrAxitycIjRmZB+Q0JaN07GZIWaTBIGQzfaZv+qr1n8X1XUEJ5rZ/vx6OVD9RRYlrNnXWExQXcmZeD/BQ==}
@@ -6847,6 +6859,12 @@ packages:
     resolution: {integrity: sha512-ravE6m9Atw9Z/jjttRUZ+clIXogdghyZAuWJ3qEzjT+jI/dL1ifAqhZeC5VHzQp1MSt1+jxKkFNemj/iO7tVUA==}
     engines: {node: '>=4'}
     dev: false
+
+  /prettier@2.8.8:
+    resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
+    dev: true
 
   /pretty-error@4.0.0:
     resolution: {integrity: sha512-AoJ5YMAcXKYxKhuJGdcvse+Voc6v1RgnsR3nWcYU7q4t6z0Q6T86sv5Zq8VIRbOWWFpvdGE83LtdSMNd+6Y0xw==}
