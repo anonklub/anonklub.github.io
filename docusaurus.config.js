@@ -9,7 +9,6 @@ const config = {
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
-  // Usually your repo name.
   deploymentBranch: 'deploy',
   favicon: 'img/favicon.ico',
 
@@ -40,7 +39,8 @@ const config = {
       },
     ],
   ],
-  projectName: 'anonklub.github.io',
+  // Usually your repo name.
+  projectName: 'docs',
   tagline: 'Anonymous Proof of Ethereum Address Ownership',
 
   themeConfig:
@@ -64,7 +64,7 @@ const config = {
           {
             items: [
               {
-                href: 'https://github.com/anonklub',
+                href: 'https://github.com/anonklub/docs',
                 label: 'GitHub',
               },
             ],
@@ -110,7 +110,7 @@ const config = {
             position: 'left',
           },
           {
-            href: 'https://github.com/anonklub',
+            href: 'https://github.com/anonklub/docs',
             label: 'GitHub',
             position: 'right',
           },
