@@ -129,7 +129,7 @@ const config = {
 
   title: 'Anonklub',
   // Set the production url of your site here
-  url: 'https://anonklub.github.io',
+  url: 'https://docs.anonklub.xyz',
 }
 
 module.exports = config
