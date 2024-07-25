@@ -15,7 +15,7 @@ Once you have a proof request, you can generate a proof either locally or by rel
 ## Remote
 
 ```typescript
-const jobId = await proofRequest.submit()
+const jobId = await proofRequest.submit();
 ```
 
 ## Local
@@ -23,15 +23,15 @@ const jobId = await proofRequest.submit()
 You'll need the circom generated files. You can either re-generate them yourself or download them from our [github repo](https://github.com/privacy-scaling-explorations/e2e-zk-ecdsa/tree/main/apis/proving/generated).
 
 ```javascript
-import { execSync, readFileSync, writeFileSync } from 'fs'
+import { execSync, readFileSync, writeFileSync } from 'fs';
 
-const circuitInput = new CircuitInput(proofRequest)
+const circuitInput = new CircuitInput(proofRequest);
 
-execSync('node ./generate_witness.js ./main.wasm ./input.json ./witness.wtns')
+execSync('node ./generate_witness.js ./main.wasm ./input.json ./witness.wtns');
 execSync(
   'snarkjs groth16 prove ./circuit_0001.zkey ./witness.wtns ./proof.json ./public.json',
-)
+);
 
-const proof = JSON.parse(fs.readFileSync('./proof.json', 'utf8'))
-const publicSignals = JSON.parse(fs.readFileSync('./public.json', 'utf8'))
+const proof = JSON.parse(fs.readFileSync('./proof.json', 'utf8'));
+const publicSignals = JSON.parse(fs.readFileSync('./public.json', 'utf8'));
 ```

@@ -14,5 +14,10 @@ To create proofs you'll need to supply the following parameters:
   You can either run it [locally](https://github.com/privacy-scaling-explorations/e2e-zk-ecdsa/tree/main/apis/prove) or use the hosted version at [TODO](#)
 
 ```typescript
-const proofRequest = new ProofRequest({ addresses, message, rawSignature, url })
+const proofRequest = new ProofRequest({
+  addresses,
+  message,
+  rawSignature,
+  url,
+});
 ```

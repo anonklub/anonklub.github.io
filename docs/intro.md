@@ -68,7 +68,7 @@ The goal here is to more directly verify the honest computation of ECDSA in a SN
 ## Product Vision: "Zkfy ECDSA signatures"
 
 For users that want to anonymously prove membership of a group on the Ethereum network, a web application would allow proving and verifying membership in a on-chain group on the fly.
-Unlike Mixers, it wouldn't require smart contracts to manage an anonymity set, therefore offering greater resistance to censorship risks (see address blacklisting risk).  
+Unlike Mixers, it wouldn't require smart contracts to manage an anonymity set, therefore offering greater resistance to censorship risks (see address blacklisting risk).\
 Unlike [Semaphore](http://semaphore.appliedzkp.org/) or [Interep](https://interep.link/), it wouldn't require the creation of a new identity and the management of a corresponding new secret, therefore offering a better UX.
 
 ### Workflow Examples
