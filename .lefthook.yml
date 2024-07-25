@@ -1,0 +1,7 @@
+assert_lefthook_installed: true
+output: [summary]
+pre-commit:
+  commands:
+    fmt:
+      run: bun dprint fmt
+      staged_fixed: true

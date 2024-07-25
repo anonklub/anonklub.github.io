@@ -2,7 +2,8 @@
   "devDependencies": {
     "@types/bun": "latest",
     "docsify-cli": "^4.4.4",
-    "dprint": "^0.47.2"
+    "dprint": "^0.47.2",
+    "lefthook": "^1.7.7"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
