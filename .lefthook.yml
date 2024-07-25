@@ -4,4 +4,4 @@ pre-commit:
   commands:
     fmt:
       run: bun dprint fmt
-      staged_fixed: true
+      stage_fixed: true

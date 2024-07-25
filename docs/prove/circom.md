@@ -1,6 +1,7 @@
 > Refer to the [`archive/circom` branch of the `anonklub/anonklub` repository](https://github.com/anonklub/anonklub/tree/archive/circom)
 
 > Requirements
+>
 > - [ ] node >= 20, pnpm
 > - [ ] snarkjs installed globally: `pnpm add -g snarkjs`
 > - [ ] [install circom](https://docs.circom.io/getting-started/installation/)
@@ -51,26 +52,30 @@ execSync(
 ```
 
 ## Interactive Demo
+
 1. Clone the `archive/circom` branch of the repository:
-  ```shell
-  git clone -b archive/circom https://github.com/anonklub/anonklub
-  ```
+
+```shell
+git clone -b archive/circom https://github.com/anonklub/anonklub
+```
 
 2. Install dependencies:
-  ```shell
-  cd anonklub && pnpm i
-  ```
-  
-3. Run the CLI:
-  ```shell
-  pnpm demo
-  ```
-## Step By Step
 
+```shell
+cd anonklub && pnpm i
+```
+
+3. Run the CLI:
+
+```shell
+pnpm demo
+```
+
+## Step By Step
 
 ### Create Proof Request
 
-[`@anonklub/proof`](https://www.npmjs.com/package/@anonklub/proof) provides utilities to create proof request and submit them to a proving server.  
+[`@anonklub/proof`](https://www.npmjs.com/package/@anonklub/proof) provides utilities to create proof request and submit them to a proving server.
 
 To create proofs you'll need to supply the following parameters:
 
@@ -81,14 +86,14 @@ To create proofs you'll need to supply the following parameters:
   You can either run it [locally](https://github.com/privacy-scaling-explorations/e2e-zk-ecdsa/tree/main/apis/prove) or use the hosted version at [TODO](#)
 
 ```js
-import { ProofRequest } from '@anonklub/proof'
+import { ProofRequest } from '@anonklub/proof';
 
 const proofRequest = new ProofRequest({
   addresses,
   message,
   rawSignature,
   url,
-})
+});
 ```
 
 ### Generate Proof
@@ -97,13 +102,13 @@ Once you have a proof request, you can generate a proof either locally or by rel
 
 | Server | Pros                                         | Cons                                                                                                                                 |
 | ------ | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| Remote | No need to install circom or snarkjs. Faster | Users need to trust your server with their privacy                                                                                       |
+| Remote | No need to install circom or snarkjs. Faster | Users need to trust your server with their privacy                                                                                   |
 | Local  | Trustless                                    | You need to install circom and snarkjs. Slower. Need to tweak system partitions to allow for more swap memory on "regular" machines. |
 
 #### Remote
 
 ```js
-const jobId = await proofRequest.submit()
+const jobId = await proofRequest.submit();
 ```
 
 #### Local
@@ -111,7 +116,7 @@ const jobId = await proofRequest.submit()
 You'll need the circom generated files. You can either re-generate them yourself or download them from our [github repo](https://github.com/privacy-scaling-explorations/e2e-zk-ecdsa/tree/main/apis/proving/generated).
 
 ```js
-import { execSync, readFileSync, writeFileSync } from 'node:fs'
+import { execSync, readFileSync, writeFileSync } from 'node:fs';
 
 const circuitInput = new CircuitInput(proofRequest);
 

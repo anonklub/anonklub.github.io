@@ -27,21 +27,21 @@
       loadSidebar: true,
       name: 'AnonKlub',
       plugins: [
-    function pageFooter(hook, vm) {
-      var footer = [
-        '<hr/>',
-        '<footer>',
-        '<span>',
-        `Copyright &copy; ${new Date().getFullYear()} <a href="https://pse.dev">PSE</a>.`,
-        '</span>',
-        '</footer>',
-      ].join('');
+        function pageFooter(hook, vm) {
+          var footer = [
+            '<hr/>',
+            '<footer>',
+            '<span>',
+            `Copyright &copy; ${new Date().getFullYear()} <a href="https://pse.dev">PSE</a>.`,
+            '</span>',
+            '</footer>',
+          ].join('');
 
-      hook.afterEach(function (html) {
-        return html + footer;
-      });
-    },
-  ],
+          hook.afterEach(function (html) {
+            return html + footer;
+          });
+        },
+      ],
       repo: 'anonklub/anonklub',
       subMaxLevel: 3,
       themeColor: '#FB5E4D',

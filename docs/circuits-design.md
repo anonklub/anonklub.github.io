@@ -1,9 +1,11 @@
 The current version of Anon Klub is a proof of concept. There are major drawbacks due to its implementation details. **The ZKPs it generates should not be used for production systems.** However, new systems are being built that will make Anon Klub far more efficient and secure in the future.
 
 ## Circom
+
 > [`archive/circom` branch](https://github.com/anonklub/anonklub/tree/archive/circom)
 
 The `circom` version uses:
+
 - groth16 proofs over the bn128 curve
 - **An unsafe Common Reference String**
 - Standard secp256k1 ECDSA signature verification
@@ -18,12 +20,14 @@ Standard secp256k1 signature verification has two problems: it's non-determinist
 Merkle trees are a simple and useful accumulator, but other accumulators have better properties. For example, [Caulk](https://eprint.iacr.org/2022/621) has cheaper insertions which saves significant gas costs for mixers.
 
 ## Spartan-ecdsa
+
 > [`main` branch](https://github.com/anonklub/anonklub/tree/main)
 
 [Spartan-ecdsa](https://github.com/personaelabs/spartan-ecdsa) is, to our knowledge, the most efficient method for zk-ECDSA. It is already useful in off-chain applications, and we integrated it in AnonKlub for that reason:
+
 - [spartan-ecdsa-wasm crate](https://github.com/anonklub/anonklub/tree/main/pkgs/spartan-ecdsa-wasm)
 - [corresponding web worker npm package](https://github.com/anonklub/anonklub/tree/main/pkgs/spartan-ecdsa-worker) which is a [dependency](https://github.com/anonklub/anonklub/blob/4c1d809a90018bff33608bd077c65e476ae8a955/ui/package.json#L11) of the live web demo UI at [anonklub.xyz](https://anonklub.xyz).
-It uses the [Spartan](https://github.com/microsoft/Spartan) proving system, which doesn't have efficient on-chain verification, but that is [in the works](https://github.com/personaelabs/spartan-ecdsa/tree/hoplite).
+  It uses the [Spartan](https://github.com/microsoft/Spartan) proving system, which doesn't have efficient on-chain verification, but that is [in the works](https://github.com/personaelabs/spartan-ecdsa/tree/hoplite).
 
 ## Future Plans
 
@@ -36,4 +40,3 @@ In the future, Anon Klub will support two types of signatures: nullifiers and pl
 ### Halo2
 
 > in development
-
