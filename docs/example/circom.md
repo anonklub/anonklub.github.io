@@ -1,10 +1,4 @@
----
-sidebar_position: 2
----
-
-# Example
-
-```typescript
+```js
 // fetch anonymity set (or load local file)
 import { execSync } from 'child_process';
 

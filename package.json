@@ -9,6 +9,6 @@
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "serve": "docsify serve docs"
+    "serve": "docsify serve docs -o"
   }
 }
