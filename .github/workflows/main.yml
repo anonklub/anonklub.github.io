@@ -1,0 +1,16 @@
+name: main
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+    paths-ignore: ['.gitignore', '.tool-versions']
+  push:
+    branches: [main]
+    paths-ignore: ['.gitignore', '.tool-versions']
+
+jobs:
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dprint/check@v2.2
