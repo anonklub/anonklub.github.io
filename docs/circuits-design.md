@@ -1,13 +1,9 @@
----
-sidebar_position: 5
----
-
-# Circuit Design
-
 The current version of Anon Klub is a proof of concept. There are major drawbacks due to its implementation details. **The ZKPs it generates should not be used for production systems.** However, new systems are being built that will make Anon Klub far more efficient and secure in the future.
 
-In particular, the current version uses:
+## Circom
+> [`archive/circom` branch](https://github.com/anonklub/anonklub/tree/archive/circom)
 
+The `circom` version uses:
 - groth16 proofs over the bn128 curve
 - **An unsafe Common Reference String**
 - Standard secp256k1 ECDSA signature verification
@@ -21,14 +17,23 @@ Standard secp256k1 signature verification has two problems: it's non-determinist
 
 Merkle trees are a simple and useful accumulator, but other accumulators have better properties. For example, [Caulk](https://eprint.iacr.org/2022/621) has cheaper insertions which saves significant gas costs for mixers.
 
+## Spartan-ecdsa
+> [`main` branch](https://github.com/anonklub/anonklub/tree/main)
+
+[Spartan-ecdsa](https://github.com/personaelabs/spartan-ecdsa) is, to our knowledge, the most efficient method for zk-ECDSA. It is already useful in off-chain applications, and we integrated it in AnonKlub for that reason:
+- [spartan-ecdsa-wasm crate](https://github.com/anonklub/anonklub/tree/main/pkgs/spartan-ecdsa-wasm)
+- [corresponding web worker npm package](https://github.com/anonklub/anonklub/tree/main/pkgs/spartan-ecdsa-worker) which is a [dependency](https://github.com/anonklub/anonklub/blob/4c1d809a90018bff33608bd077c65e476ae8a955/ui/package.json#L11) of the live web demo UI at [anonklub.xyz](https://anonklub.xyz).
+It uses the [Spartan](https://github.com/microsoft/Spartan) proving system, which doesn't have efficient on-chain verification, but that is [in the works](https://github.com/personaelabs/spartan-ecdsa/tree/hoplite).
+
 ## Future Plans
 
 In the future, Anon Klub will support two types of signatures: nullifiers and plain signatures. Nullifiers are needed for many kinds of financial applications such as mixers. Plain signatures are more efficient if nullifiers aren't needed.
 
 ### PLUME
 
-[PLUME](https://github.com/zk-nullifier-sig/zk-nullifier-sig) is the leading candidate for ECDSA nullifiers. The only existing implementation of a PLUME circuit has over 4 million constraints, making it worse than even a naive signature circuit. We are currently working on a PLUME implementation in Halo2 which will significantly improve prover time, and other teams are working on wallet integration for PLUME. Once these are complete, Anon Klub will implement user friendly set membership for PLUME nullifiers.
+[PLUME](https://github.com/zk-nullifier-sig/zk-nullifier-sig) is the leading candidate for ECDSA nullifiers. The only existing implementation of a PLUME circuit has over 4 million constraints, making it worse than even a naive signature circuit. We are currently working on a PLUME implementation in Halo2 which will significantly improve prover time, and other teams are working on wallet integration for PLUME. Once these are complete, AnonKlub will implement user friendly set membership for PLUME nullifiers.
 
-### Spartan-ecdsa
+### Halo2
 
-[Spartan-ecdsa](https://github.com/personaelabs/spartan-ecdsa) is, to our knowledge, the most efficient method for zk-ECDSA. It is already useful in off-chain applications, and we intend to implement it in Anon Klub soon for that reason. It uses the [Spartan](https://github.com/microsoft/Spartan) proving system, which doesn't have efficient on-chain verification, but that is [in the works](https://github.com/personaelabs/spartan-ecdsa/tree/hoplite).
+> in development
+

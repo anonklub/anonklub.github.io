@@ -1,7 +1,8 @@
 - [Introduction](introduction.md)
-- Example
-  - [Circom](example/circom.md)
-  - Spartan
-  - Halo2
-- APIs
-  - Query
+- Tutorial
+  - [Anonymity Set](prove/anonset.md)
+  - [Prove With Circom](prove/circom.md)
+  - [Prove With Spartan](prove/spartan.md)
+  - [Prove With Halo2](prove/halo2.md)
+- [APIs](apis.md)
+- [Circuits Design](circuits-design.md)
