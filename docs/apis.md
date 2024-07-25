@@ -1,14 +1,7 @@
----
-title: APIs
-sidebar_position: 5
----
-
-# APIS
-
 ## Query
 
-See online [swagger UI](https://anonset.fly.dev/)
+See online [swagger UI](https://www.query.anonklub.xyz)
 
-## Proofs
+## Proving Server (`circom` only)
 
-See [openapi specification](https://github.com/privacy-scaling-explorations/e2e-zk-ecdsa/blob/main/apis/prove/openapi.yaml) for details.
+See [openapi specification](https://github.com/anonklub/anonklub/blob/archive/circom/apis/prove/openapi.yaml) for details.

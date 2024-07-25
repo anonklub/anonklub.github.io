@@ -1,44 +1,14 @@
 {
-  "dependencies": {
-    "@docusaurus/core": "2.4.3",
-    "@docusaurus/preset-classic": "2.4.3",
-    "@mdx-js/react": "^1.6.22",
-    "clsx": "^1.2.1",
-    "prism-react-renderer": "^1.3.5",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
-  },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "2.3.1",
-    "@docusaurus/types": "^2.4.1",
-    "@sripwoud/prettier-config": "^1.0.5",
-    "@tsconfig/docusaurus": "^1.0.5",
-    "@types/node": "^20.4.6",
-    "concurrently": "^8.2.0"
+    "@types/bun": "latest",
+    "docsify-cli": "^4.4.4",
+    "dprint": "^0.47.2",
+    "lefthook": "^1.7.7"
   },
-  "browserslist": {
-    "production": [">0.5%", "not dead", "not op_mini all"],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "engines": {
-    "node": ">=16.14"
+  "peerDependencies": {
+    "typescript": "^5.0.0"
   },
   "scripts": {
-    "build": "docusaurus build",
-    "clear": "docusaurus clear",
-    "deploy": "docusaurus deploy",
-    "docusaurus": "docusaurus",
-    "format": "prettier --write .",
-    "format.check": "prettier --check .",
-    "serve": "docusaurus serve",
-    "start": "docusaurus start",
-    "swizzle": "docusaurus swizzle",
-    "validate": "concurrently 'pnpm build' 'pnpm format.check'",
-    "write-heading-ids": "docusaurus write-heading-ids",
-    "write-translations": "docusaurus write-translations"
+    "serve": "docsify serve docs -o"
   }
 }
