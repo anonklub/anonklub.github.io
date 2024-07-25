@@ -3,10 +3,10 @@ on:
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened]
-    paths-ignore: ['.gitignore', '.tool-versions']
+    paths: ['**.css', '**.html', '**.json', '**.jsonc', '**.md', '**.yml']
   push:
     branches: [main]
-    paths-ignore: ['.gitignore', '.tool-versions']
+    paths: ['**.css', '**.html', '**.json', '**.jsonc', '**.md', '**.yml']
 
 jobs:
   fmt:
