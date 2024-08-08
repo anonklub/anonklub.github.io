@@ -5,4 +5,5 @@
   - [Prove With Spartan](prove/spartan.md)
   - [Prove With Halo2](prove/halo2.md)
 - [APIs](apis.md)
+- [Architecture](architecture.md)
 - [Circuits Design](circuits-design.md)
