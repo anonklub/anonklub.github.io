@@ -24,4 +24,123 @@ This approach not only enhances privacy but also reduces network latency, as the
 
 Next, we show an opiniated way (this is what our [UI](https://github.com/anonklub/anonklub/tree/main/ui) does) of wrapping these wasm and web workers features into React hooks for convenient use in a front end application:
 
-TODO: add code snippets about preparing web workers and hooks that are basically the same for spartan and halo2.
+# First Step: Preparing the WebAssembly (Wasm) in the Browser
+
+For both the `halo2` and `spartan` proving systems, web workers function similarly at the ABI level. To begin importing and initializing the Wasm code in the browser, you should invoke `worker.prepare()`. This function handles the necessary steps to load and configure the Wasm module.
+
+## Error Reporting in the Browser
+
+When running Wasm code in the client-side browser, it's crucial to have effective error reporting to assist in debugging. The `prepare()` function includes a call to `init_panic_hook()`, which sets up a panic hook. This hook redirects panic messages from Rust into the browser's console, making it easier to identify and resolve issues directly within the developer tools.
+
+This setup ensures that any runtime errors in the Rust code are clearly reported, with detailed stack traces available in the console, enhancing the debugging process during development.
+
+## Integration with Merkle Tree Packages
+
+The same `prepare()` function is also available in the Merkle tree packages associated with each proving system: `@anonklub/halo2-binary-merkle-tree-worker` for the halo2 circuit and `@anonklub/merkle-tree-worker` for the spartan circuit. This ensures consistent Wasm initialization and error reporting across different components of the proving systems.
+
+## Thread Pool Initialization in Halo2 Packages
+
+The `halo2` packages include an additional step in their `prepare()` functions that is not present in the `spartan` packages. Specifically, the `halo2` packages use [wasm-bindgen-rayon](https://github.com/RReverser/wasm-bindgen-rayon) to enable multi-threading within the WebAssembly environment.
+
+As part of this setup, the `prepare()` function checks the number of hardware threads available on the user's device via `navigator.hardwareConcurrency`. This information is then used to initialize a thread pool using `initThreadPool(numThreads)`, which allows the WebAssembly code to efficiently utilize multiple threads for parallel processing tasks.
+
+## Implementation Details of the `prepare()` Function
+
+Each package has its own specific implementation of the `prepare()` function, tailored to its particular needs:
+
+1. Merkle Tree Web Worker (@anonklub/merkle-tree-worker):
+
+```js
+async prepare() {
+    merkleTreeWasm = await import('@anonklub/merkle-tree-wasm');
+}
+```
+
+2. Spartan Circuit Web Worker (@anonklub/spartan-ecdsa-worker):
+
+```js
+async prepare() {
+    spartanEcdsaWasm = await import('@anonklub/spartan-ecdsa-wasm');
+    spartanEcdsaWasm.init_panic_hook();
+
+    if (!initialized) {
+        spartanEcdsaWasm.prepare();
+        initialized = true;
+    }
+}
+```
+
+3. Halo2 Binary Merkle Tree Web Worker (@anonklub/halo2-binary-merkle-tree-worker):
+
+```js
+async prepare() {
+    halo2BinaryMerkleTreeWasm = await import('@anonklub/halo2-binary-merkle-tree/dist/');
+
+    const wasmModuleUrl = new URL('@anonklub/halo2-binary-merkle-tree/dist/index_bg.wasm', import.meta.url);
+    const response = await fetch(wasmModuleUrl);
+    const bufferSource = await response.arrayBuffer();
+
+    await halo2BinaryMerkleTreeWasm.initSync(bufferSource);
+    await halo2BinaryMerkleTreeWasm.initPanicHook();
+    const numThreads = navigator.hardwareConcurrency;
+    await halo2BinaryMerkleTreeWasm.initThreadPool(numThreads);
+}
+```
+
+4. Halo2 Circuit Web Worker (@anonklub/halo2-eth-membership):
+
+```js
+async prepare() {
+    halo2EthMembershipWasm = await import('@anonklub/halo2-eth-membership');
+
+    const wasmModuleUrl = new URL('@anonklub/halo2-eth-membership/dist/index_bg.wasm', import.meta.url);
+    const response = await fetch(wasmModuleUrl);
+    const bufferSource = await response.arrayBuffer();
+
+    await halo2EthMembershipWasm.initSync(bufferSource);
+    await halo2EthMembershipWasm.initPanicHook();
+
+    if (!initialized) {
+        const numThreads = navigator.hardwareConcurrency;
+        await halo2EthMembershipWasm.initThreadPool(numThreads);
+        initialized = true;
+    }
+}
+```
+
+# Second Step: Using Wasm `prepare()` in a React Hook
+
+After setting up the WebAssembly (Wasm) modules in the browser, the next step is to use them in your React components. You can do this by creating a React hook that handles the Wasm initialization within a web worker.
+
+## Creating a Simple React Hook
+
+To make sure the Wasm module is ready before your app uses it, you can create a hook called `useWorker`. This hook will load the worker and set it up when your component mounts.
+
+### Example: `useWorker` Hook
+
+Here’s a simple example of how to create and use the `useWorker` hook:
+
+```js
+import { useEffect, useState } from 'react';
+import { SpartanEcdsaWorker } from '@anonklub/spartan-ecdsa-worker';
+import { MerkleTreeWorker } from '@anonklub/merkle-tree-worker';
+import { Halo2EthMembershipWorker } from '@anonklub/halo2-eth-membership-worker';
+
+type Worker =
+  | typeof SpartanEcdsaWorker
+  | typeof MerkleTreeWorker
+  | typeof Halo2EthMembershipWorker;
+
+export const useWorker = (worker: Worker) => {
+  const [isWorkerReady, setIsWorkerReady] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      await worker.prepare();
+      setIsWorkerReady(true);
+    })();
+  }, [worker]);
+
+  return isWorkerReady;
+};
+```
