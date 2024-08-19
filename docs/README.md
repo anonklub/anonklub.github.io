@@ -1,3 +1,4 @@
+> [!Warning]
 > This project has been sunset and isn't being actively worked on anymore.
 > The previously deployed services (query API, UI, discord bot) have been shut down. So the corresponding links (_anonklub.xyz_, _docs.anonklub.xyz_, _query.anonklub.xyz_) in this documentation website won't work.
 
