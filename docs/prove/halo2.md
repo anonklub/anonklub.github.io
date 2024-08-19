@@ -5,7 +5,6 @@
 > - [ ] Install [@anonklub/halo2-binary-merkle-tree](#), a web worker that includes the WebAssembly compilation of the Halo2 Merkle tree gadget.
 > - [ ] Install [@anonklub/halo2-eth-membership-worker](#), a web worker that contains the WebAssembly compilation of the Halo2 circuit.
 
-
 ## TLDR
 
 ### 
@@ -124,6 +123,7 @@ export const useHalo2EthMembershipWorker = () => {
 [@anonklub/halo2-binary-merkle-tree](#) and [@anonklub/halo2-eth-membership-worker](#) are designed to operate on the client side. In the example above, ensure that you run prepare from each worker using `await worker.prepare()`. This function initializes the WebAssembly (WASM) circuit and determines the number of available threads in the browser to initialize the thread pool:
 
 #### `useHalo2BinaryMerkleTreeWorker.prepare()`
+
 ```js
 async prepare() {
     halo2BinaryMerkleTreeWasm = await import(
@@ -145,6 +145,7 @@ async prepare() {
 ```
 
 #### `useHalo2EthMembershipWorker.prepare()`
+
 ```js
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 async prepare() {
@@ -169,6 +170,7 @@ async prepare() {
 ```
 
 ## Merkle Proof
+
 Generating a Merkle proof to verify the inclusion of an Ethereum address within a Merkle tree is crucial for the circuit's functionality. We utilize a binary Merkle tree structure, and the @anonklub/halo2-binary-merkle-tree library provides a gadget that serves as a constraint for verifying the Merkle proof within the circuit. Follow these steps to generate a Merkle proof:
 
 1. Call the `prepare()` function as previously described.
@@ -203,6 +205,7 @@ export interface ProveInputs {
 ```
 
 ### Example of use
+
 ```js
 import { useAsync } from 'react-use'
 import type { Hex } from 'viem'
@@ -229,8 +232,10 @@ export const useProofResult = () => {
 ## Verify of Membership
 
 After successfully generating the Halo2 proof, you can proceed with verifying that proof in Halo2. Follow these steps:
+
 1. Ensure you have the `membershipProofSerialized` output from the proof of membership step.
 2. Specify the polynomial degree K for running the circuit (e.g., default: 15). This must be the same degree used in the proof of membership step.
+
 ```js
 export interface VerifyInputs {
   membershipProofSerialized: Uint8Array,
@@ -238,24 +243,24 @@ export interface VerifyInputs {
 }
 ```
 
-### Example of use 
+### Example of use
 
 ```js
-import { useAsync } from 'react-use'
-import { useStore } from '@/hooks/useStore'
-import { useHalo2EthMembershipWorker } from '@/hooks/useHalo2EthMembershipWorker'
+import { useHalo2EthMembershipWorker } from "@/hooks/useHalo2EthMembershipWorker";
+import { useStore } from "@/hooks/useStore";
+import { useAsync } from "react-use";
 
 export const useVerifyProof = () => {
-  const { proof } = useStore()
-  const { verifyMembership } = useHalo2EthMembershipWorker()
+  const { proof } = useStore();
+  const { verifyMembership } = useHalo2EthMembershipWorker();
 
   return useAsync(async () => {
-    if (proof === null) return
+    if (proof === null) return;
 
     return await verifyMembership({
       membershipProofSerialized: proof,
-      k: 15
-    })
-  }, [proof])
-}
+      k: 15,
+    });
+  }, [proof]);
+};
 ```
