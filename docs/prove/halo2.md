@@ -2,7 +2,7 @@
 
 > Requirements
 >
-> - [ ] Install [@anonklub/halo2-binary-merkle-tree](#), a web worker that includes the WebAssembly compilation of the Halo2 Merkle tree gadget.
+> - [ ] Install [@anonklub/halo2-binary-merkle-tree-worker](#), a web worker that includes the WebAssembly compilation of the Halo2 Merkle tree gadget.
 > - [ ] Install [@anonklub/halo2-eth-membership-worker](#), a web worker that contains the WebAssembly compilation of the Halo2 circuit.
 
 ## TLDR
