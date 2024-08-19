@@ -120,7 +120,7 @@ export const useHalo2EthMembershipWorker = () => {
 
 ### Prepare
 
-[@anonklub/halo2-binary-merkle-tree](#) and [@anonklub/halo2-eth-membership-worker](#) are designed to operate on the client side. In the example above, ensure that you run prepare from each worker using `await worker.prepare()`. This function initializes the WebAssembly (WASM) circuit and determines the number of available threads in the browser to initialize the thread pool:
+[@anonklub/halo2-binary-merkle-tree-worker](#) and [@anonklub/halo2-eth-membership-worker](#) are designed to operate on the client side. In the example above, ensure that you run prepare from each worker using `await worker.prepare()`. This function initializes the WebAssembly (WASM) circuit and determines the number of available threads in the browser to initialize the thread pool:
 
 #### `useHalo2BinaryMerkleTreeWorker.prepare()`
 
@@ -171,7 +171,7 @@ async prepare() {
 
 ## Merkle Proof
 
-Generating a Merkle proof to verify the inclusion of an Ethereum address within a Merkle tree is crucial for the circuit's functionality. We utilize a binary Merkle tree structure, and the @anonklub/halo2-binary-merkle-tree library provides a gadget that serves as a constraint for verifying the Merkle proof within the circuit. Follow these steps to generate a Merkle proof:
+Generating a Merkle proof to verify the inclusion of an Ethereum address within a Merkle tree is crucial for the circuit's functionality. We utilize a binary Merkle tree structure, and the `@anonklub/halo2-binary-merkle-tree-worker` library provides a gadget that serves as a constraint for verifying the Merkle proof within the circuit. Follow these steps to generate a Merkle proof:
 
 1. Call the `prepare()` function as previously described.
 2. Prepare the list of Ethereum addresses. The Anonklub project can assist in scanning the blockchain to create this list.
