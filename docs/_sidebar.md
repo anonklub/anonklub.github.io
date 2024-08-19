@@ -1,9 +1,12 @@
 - [Introduction](introduction.md)
 - Tutorial
   - [Anonymity Set](prove/anonset.md)
-  - [Prove With Circom](prove/circom.md)
-  - [Prove With Spartan](prove/spartan.md)
-  - [Prove With Halo2](prove/halo2.md)
+  - Prove Server Side
+    - [Circom](prove/circom.md)
+  - Prove Client Side
+    - [Wasm & Web Workers](prove/wasm.md)
+    - [Spartan](prove/spartan.md)
+    - [Halo2](prove/halo2.md)
 - [APIs](apis.md)
 - [Architecture](architecture.md)
 - [Circuits Design](circuits-design.md)

@@ -1,3 +1,5 @@
+> Nothing inherent to circom requires generating proofs server side. In practice, it is not sensible given its performance to attempt to do it client side.
+
 > Refer to the [`archive/circom` branch of the `anonklub/anonklub` repository](https://github.com/anonklub/anonklub/tree/archive/circom)
 
 > Requirements
