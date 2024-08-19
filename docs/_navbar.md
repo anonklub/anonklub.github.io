@@ -1,8 +1,0 @@
-- Introduction
-- Example
-- Tutorial
-  - Circom
-  - Spartan
-  - Halo2
-- APIs
-- Circuit Design
