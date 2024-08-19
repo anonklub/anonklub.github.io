@@ -1,6 +1,6 @@
 ## Query
 
-See online [swagger UI](https://www.query.anonklub.xyz)
+See [openapi specification](https://github.com/anonklub/anonklub/blob/main/query-api/openapi.yml) or online [swagger UI](https://query.anonklub.xyz).
 
 ## Proving Server
 
