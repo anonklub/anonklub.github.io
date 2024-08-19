@@ -246,9 +246,9 @@ export interface VerifyInputs {
 ### Example of use
 
 ```js
-import { useHalo2EthMembershipWorker } from "@/hooks/useHalo2EthMembershipWorker";
-import { useStore } from "@/hooks/useStore";
-import { useAsync } from "react-use";
+import { useHalo2EthMembershipWorker } from '@/hooks/useHalo2EthMembershipWorker';
+import { useStore } from '@/hooks/useStore';
+import { useAsync } from 'react-use';
 
 export const useVerifyProof = () => {
   const { proof } = useStore();
