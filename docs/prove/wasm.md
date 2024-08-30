@@ -26,7 +26,7 @@ Next, we show an opiniated way (this is what our [UI](https://github.com/anonklu
 
 # First Step: Preparing the WebAssembly (Wasm) in the Browser
 
-For both the `halo2` and `spartan` proving systems, web workers function similarly at the ABI level. To begin importing and initializing the Wasm code in the browser, you should invoke worker.prepare(). This function handles the necessary steps to load and configure the Wasm module.
+For both the `halo2` and `spartan` proving systems, web workers function similarly at the ABI level. To begin importing and initializing the Wasm code in the browser, you should invoke `worker.prepare()`. This function handles the necessary steps to load and configure the Wasm module.
 
 ## Error Reporting in the Browser
 
@@ -50,7 +50,7 @@ Each package has its own specific implementation of the `prepare()` function, ta
 
 1. Merkle Tree Web Worker (@anonklub/merkle-tree-worker):
 
-```ts
+```js
 async prepare() {
     merkleTreeWasm = await import('@anonklub/merkle-tree-wasm');
 }
@@ -58,7 +58,7 @@ async prepare() {
 
 2. Spartan Circuit Web Worker (@anonklub/spartan-ecdsa-worker):
 
-```ts
+```js
 async prepare() {
     spartanEcdsaWasm = await import('@anonklub/spartan-ecdsa-wasm');
     spartanEcdsaWasm.init_panic_hook();
@@ -72,7 +72,7 @@ async prepare() {
 
 3. Halo2 Binary Merkle Tree Web Worker (@anonklub/halo2-binary-merkle-tree-worker):
 
-```ts
+```js
 async prepare() {
     halo2BinaryMerkleTreeWasm = await import('@anonklub/halo2-binary-merkle-tree/dist/');
 
@@ -89,7 +89,7 @@ async prepare() {
 
 4. Halo2 Circuit Web Worker (@anonklub/halo2-eth-membership):
 
-```ts
+```js
 async prepare() {
     halo2EthMembershipWasm = await import('@anonklub/halo2-eth-membership');
 
@@ -120,7 +120,7 @@ To make sure the Wasm module is ready before your app uses it, you can create a 
 
 Here’s a simple example of how to create and use the `useWorker` hook:
 
-```ts
+```js
 import { useEffect, useState } from 'react';
 import { SpartanEcdsaWorker } from '@anonklub/spartan-ecdsa-worker';
 import { MerkleTreeWorker } from '@anonklub/merkle-tree-worker';
