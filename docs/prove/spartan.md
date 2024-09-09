@@ -3,8 +3,8 @@
 
 > Requirements
 >
-> - [ ] Install [@anonklub/merkle-tree-worker](https://www.npmjs.com/package/@anonklub/merkle-tree-worker), a web worker that includes the WebAssembly compilation a binary merkle .
-> - [ ] Install [@anonklub/spartan-ecdsa-worker](https://www.npmjs.com/package/@anonklub/spartan-ecdsa-worker), a web worker that contains the WebAssembly compilation of the Spartan circuit.
+> - [ ] Install [@anonklub/merkle-tree-worker](https://www.npmjs.com/package/@anonklub/merkle-tree-worker), a web worker that includes the WebAssembly compilation of a [binary merkle tree rust implementation](https://github.com/anonklub/anonklub/tree/main/pkgs/merkle-tree-wasm).
+> - [ ] Install [@anonklub/spartan-ecdsa-worker](https://www.npmjs.com/package/@anonklub/spartan-ecdsa-worker), a web worker that contains the WebAssembly compilation of the Spartan circuit, implemented with the [`sapir`](https://github.com/personaelabs/sapir) rust crate.
 
 ## TLDR
 
@@ -16,6 +16,7 @@ import { type ProveMembershipFn, SpartanEcdsaWorker, type VerifyMembershipFn } f
 import { type GenerateMerkleProofFn, MerkleTreeWorker } from '@anonklub/merkle-tree-worker'
 import { useEffect, useState } from 'react'
 
+// A React hook example for dealing with web-workers; i.e. https://github.com/anonklub/anonklub/blob/main/ui/src/hooks/useWorker.ts
 export const useWorker = (
   worker: typeof SpartanEcdsaWorker | typeof MerkleTreeWorker
 ) => {
@@ -26,13 +27,13 @@ export const useWorker = (
       await worker.prepare()
       setIsWorkerReady(true)
     })()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return isWorkerReady
 }
 
-export const useMerkleTreeWasmWorker = () => {
+// A React hook example for integrating with `@anonklub/merkle-tree-worker`; https://github.com/anonklub/anonklub/blob/main/ui/src/hooks/useMerkleTreeWorker.ts
+export const useMerkleTreeWasmWorker = () => { 
   const isWorkerReady = useWorker(MerkleTreeWorker)
 
   const generateMerkleProof: GenerateMerkleProofFn = async (
@@ -42,19 +43,14 @@ export const useMerkleTreeWasmWorker = () => {
   ): Promise<Uint8Array> => {
     process.env.NODE_ENV === 'development' && console.time('==>merkle')
 
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const proof = await MerkleTreeWorker.generateMerkleProof(
-        leaves,
-        leaf,
-        depth,
-      )
+    const proof = await MerkleTreeWorker.generateMerkleProof(
+      leaves,
+      leaf,
+      depth,
+    )
 
-      process.env.NODE_ENV === 'development' && console.timeEnd('==>merkle')
-      return proof
-    } catch (error) {
-      throw error
-    }
+    process.env.NODE_ENV === 'development' && console.timeEnd('==>merkle')
+    return proof
   }
 
   return {
@@ -63,6 +59,7 @@ export const useMerkleTreeWasmWorker = () => {
   }
 }
 
+// A React hook example for integrating with `@anonklub/spartan-ecdsa-worker` circuit web-worker; https://github.com/anonklub/anonklub/blob/main/ui/src/hooks/useSpartanEcdsaWorker.ts
 export const useSpartanEcdsaWorker = () => {
   const isWorkerReady = useWorker(SpartanEcdsaWorker)
 
@@ -108,33 +105,11 @@ export const useSpartanEcdsaWorker = () => {
 
 ### Prepare
 
-[@anonklub/merkle-tree-worker](#) and [@anonklub/spartan-ecdsa-worker](#) are designed to operate on the client side. In the example above, ensure that you run prepare from each worker using `await worker.prepare()`. This function initializes the WebAssembly (WASM) code from the underlying rust code:
-
-#### `MerkleTreeWorker.prepare()`
-
-```js
-async prepare() {
-    merkleTreeWasm = await import('@anonklub/merkle-tree-wasm')
-}
-```
-
-#### `SpartanEcdsaWorker.prepare()`
-
-```js
-async prepare() {
-    spartanEcdsaWasm = await import('@anonklub/spartan-ecdsa-wasm')
-    spartanEcdsaWasm.init_panic_hook()
-
-    if (!initialized) {
-        spartanEcdsaWasm.prepare()
-        initialized = true
-    }
-}
-```
+[@anonklub/merkle-tree-worker](#) and [@anonklub/spartan-ecdsa-worker](#) are designed to operate on the client side. In the example above, ensure that you prepare each worker using `await worker.prepare()`. Please check `Wasm` doc for more details.
 
 ## Merkle Proof
 
-Generating a Merkle proof to verify the inclusion of an Ethereum address within a Merkle tree is crucial for the circuit's functionality. We utilize a binary Merkle tree structure, and the `@anonklub/merkle-tree-worker` library provides a gadget that serves as a constraint for verifying the Merkle proof within the circuit. Follow these steps to generate a Merkle proof:
+Generating a Merkle proof to verify the inclusion of an Ethereum address within a Merkle tree is crucial for the circuit's functionality. We use a binary Merkle tree structure `@anonklub/merkle-tree-worker` library in case of Spartan circuits. Follow these steps to generate a Merkle proof:
 
 1. Call the `prepare()` function as previously described.
 2. Prepare the list of Ethereum addresses. The Anonklub project can assist in scanning the blockchain to create this list.
