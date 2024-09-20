@@ -274,4 +274,3 @@ The benchmark results are visualized in the plot below:
 ### Results using `criterion.rs`
 
 TODO
-
