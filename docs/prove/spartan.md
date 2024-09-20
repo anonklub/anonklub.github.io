@@ -4,7 +4,7 @@
 > Requirements
 >
 > - [ ] Install [@anonklub/merkle-tree-worker](https://www.npmjs.com/package/@anonklub/merkle-tree-worker), a web worker that includes the WebAssembly compilation of a [binary merkle tree rust implementation](https://github.com/anonklub/anonklub/tree/main/pkgs/merkle-tree-wasm).
-> - [ ] Install [@anonklub/spartan-ecdsa-worker](https://www.npmjs.com/package/@anonklub/spartan-ecdsa-worker), a web worker that contains the WebAssembly compilation of the Spartan circuit, implemented with the [`sapir`](https://github.com/personaelabs/sapir) rust crate.
+> - [ ] Install [@anonklub/spartan-ecdsa-worker](https://www.npmjs.com/package/@anonklub/spartan-ecdsa-worker), a web worker that contains the WebAssembly compilation of the [Spartan circuit](https://github.com/anonklub/anonklub/tree/main/pkgs/spartan-ecdsa-wasm), implemented with the [`sapir`](https://github.com/personaelabs/sapir) rust crate.
 
 ## TLDR
 
