@@ -1,9 +1,9 @@
-> Refer to the [Halo2 circuit in `anonklub/anonklub` repository](https://github.com/anonklub/anonklub/tree/main/pkgs)
+> Refer to the [Halo2 circuit in `anonklub/anonklub` repository](https://github.com/anonklub/anonklub/tree/main/pkgs/halo2-eth-membership)
 
 > Requirements
 >
-> - [ ] Install [@anonklub/halo2-binary-merkle-tree-worker](#), a web worker that includes the WebAssembly compilation of the Halo2 Merkle tree gadget.
-> - [ ] Install [@anonklub/halo2-eth-membership-worker](#), a web worker that contains the WebAssembly compilation of the Halo2 circuit.
+> - [ ] Install [@anonklub/halo2-binary-merkle-tree-worker](https://www.npmjs.com/package/@anonklub/halo2-binary-merkle-tree-worker), a web worker that includes the WebAssembly compilation of a [binary merkle tree rust implmentation with a Halo2 gadget for merkle proof verification](https://github.com/anonklub/anonklub/tree/main/pkgs/halo2-binary-merkle-tree).
+> - [ ] Install [@anonklub/halo2-eth-membership-worker](https://www.npmjs.com/package/@anonklub/halo2-eth-membership-worker), a web worker that contains the WebAssembly compilation of the [Halo2 circuit](https://github.com/anonklub/anonklub/tree/main/pkgs/halo2-eth-membership).
 
 ## TLDR
 
@@ -22,6 +22,7 @@ import {
 } from '@anonklub/halo2-binary-merkle-tree-worker'
 import { useEffect, useState } from 'react'
 
+// A React hook example for dealing with web-workers; i.e. https://github.com/anonklub/anonklub/blob/main/ui/src/hooks/useWorker.ts
 export const useWorker = (
   worker:typeof Halo2EthMembershipWorker,
 ) => {
@@ -32,12 +33,12 @@ export const useWorker = (
       await worker.prepare()
       setIsWorkerReady(true)
     })()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return isWorkerReady
 }
 
+// A React hook example for integrating with `@anonklub/halo2-binary-merkle-tree-worker`; https://github.com/anonklub/anonklub/blob/main/ui/src/hooks/useHalo2BinaryMerkleTree.ts
 export const useHalo2BinaryMerkleTreeWorker = () => {
   const isWorkerReady = useWorker(Halo2BinaryMerkleTreeWorker)
 
@@ -48,19 +49,14 @@ export const useHalo2BinaryMerkleTreeWorker = () => {
   ): Promise<Uint8Array> => {
     process.env.NODE_ENV === 'development' && console.time('==>merkle')
 
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const proof = await Halo2BinaryMerkleTreeWorker.generateMerkleProof(
+    const proof = await Halo2BinaryMerkleTreeWorker.generateMerkleProof(
         leaves,
         leaf,
         depth,
-      )
+    )
 
-      process.env.NODE_ENV === 'development' && console.timeEnd('==>merkle')
-      return proof
-    } catch (error) {
-      throw error
-    }
+    process.env.NODE_ENV === 'development' && console.timeEnd('==>merkle')
+    return proof
   }
 
   return {
@@ -69,6 +65,7 @@ export const useHalo2BinaryMerkleTreeWorker = () => {
   }
 }
 
+// A React hook example for integrating with `@anonklub/halo2-eth-membership-worker` circuit web-worker; https://github.com/anonklub/anonklub/blob/main/ui/src/hooks/useHalo2EthMembershipWorker.ts
 export const useHalo2EthMembershipWorker = () => {
   const isWorkerReady = useWorker(Halo2EthMembershipWorker)
 
@@ -84,7 +81,6 @@ export const useHalo2EthMembershipWorker = () => {
       merkleProofBytesSerialized,
       message,
       sig,
-      k
     })
 
     process.env.NODE_ENV === 'development' && console.timeEnd('==> Prove')
@@ -120,61 +116,14 @@ export const useHalo2EthMembershipWorker = () => {
 
 ### Prepare
 
-[@anonklub/halo2-binary-merkle-tree-worker](#) and [@anonklub/halo2-eth-membership-worker](#) are designed to operate on the client side. In the example above, ensure that you run prepare from each worker using `await worker.prepare()`. This function initializes the WebAssembly (WASM) circuit and determines the number of available threads in the browser to initialize the thread pool:
-
-#### `useHalo2BinaryMerkleTreeWorker.prepare()`
-
-```js
-async prepare() {
-    halo2BinaryMerkleTreeWasm = await import(
-        '@anonklub/halo2-binary-merkle-tree/dist/'
-    )
-
-    const wasmModuleUrl = new URL(
-        '@anonklub/halo2-binary-merkle-tree/dist/index_bg.wasm',
-        import.meta.url,
-    )
-    const response = await fetch(wasmModuleUrl)
-    const bufferSource = await response.arrayBuffer()
-
-    await halo2BinaryMerkleTreeWasm.initSync(bufferSource)
-    await halo2BinaryMerkleTreeWasm.initPanicHook()
-    const numThreads = navigator.hardwareConcurrency
-    await halo2BinaryMerkleTreeWasm.initThreadPool(numThreads)
-}
-```
-
-#### `useHalo2EthMembershipWorker.prepare()`
-
-```js
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
-async prepare() {
-    halo2EthMembershipWasm = await import('@anonklub/halo2-eth-membership')
-
-    const wasmModuleUrl = new URL(
-        '@anonklub/halo2-eth-membership/dist/index_bg.wasm',
-        import.meta.url,
-    )
-    const response = await fetch(wasmModuleUrl)
-    const bufferSource = await response.arrayBuffer()
-
-    await halo2EthMembershipWasm.initSync(bufferSource)
-    await halo2EthMembershipWasm.initPanicHook()
-
-    if (!initialized) {
-        const numThreads = navigator.hardwareConcurrency
-        await halo2EthMembershipWasm.initThreadPool(numThreads)
-        initialized = true
-    }
-}
-```
+[@anonklub/halo2-binary-merkle-tree-worker](https://www.npmjs.com/package/@anonklub/halo2-binary-merkle-tree-worker) and [@anonklub/halo2-eth-membership-worker](https://www.npmjs.com/package/@anonklub/halo2-eth-membership-worker) are designed to operate on the client side. In the example above, ensure that you run prepare from each worker using `await worker.prepare()`. Please check [`Wasm & Web-Workers`](https://anonklub.github.io/#/prove/wasm) doc for more details.
 
 ## Merkle Proof
 
-Generating a Merkle proof to verify the inclusion of an Ethereum address within a Merkle tree is crucial for the circuit's functionality. We utilize a binary Merkle tree structure, and the `@anonklub/halo2-binary-merkle-tree-worker` library provides a gadget that serves as a constraint for verifying the Merkle proof within the circuit. Follow these steps to generate a Merkle proof:
+Generating a Merkle proof to verify the inclusion of an Ethereum address within a Merkle tree is crucial for the circuit's functionality. We use a binary Merkle tree structure, and the `@anonklub/halo2-binary-merkle-tree-worker` library provides a [gadget](https://zcash.github.io/halo2/concepts/gadgets.html) that serves as a constraint for verifying the Merkle proof within the circuit. Follow these steps to generate a Merkle proof:
 
 1. Call the `prepare()` function as previously described.
-2. Prepare the list of Ethereum addresses. The Anonklub project can assist in scanning the blockchain to create this list.
+2. Prepare the list of Ethereum addresses. The Anonklub project can assist in scanning the blockchain to create this list, check out [query docs](https://anonklub.github.io/#/apis?id=query).
 3. Define the parameters needed to generate the Merkle proof, including the number of `leaves` in the tree, the tree's `depth` (e.g., default: 15), and the specific `leaf` (address) for which you want to prove membership.
 4. The generated proof will be serialized, making it immediately usable as a parameter for the proof function in the circuit.
 
@@ -192,15 +141,13 @@ Once you have generated the Merkle proof for an Ethereum address (leaf), you can
 
 1. Call the `prepare()` function as outlined earlier.
 2. Sign a `message`and obtain the `signature` in hexadecimal format.
-3. Specify the polynomial degree `K` you wish to use for running the circuit (e.g., default: 15).
-4. The generated Halo2 membership proof `membershipProofSerialized` is in a serialized form and it will be ready for immediate use in the `verifyMembership()` function.
+3. The generated Halo2 membership proof `membershipProofSerialized` is in a serialized form and it will be ready for immediate use in the `verifyMembership()` function.
 
 ```js
 export interface ProveInputs {
   sig: Hex
   message: string
   merkleProofBytesSerialized: Uint8Array,
-  k: number
 }
 ```
 
@@ -223,23 +170,20 @@ export const useProofResult = () => {
       merkleProofBytesSerialized: proofRequest.merkleProof,
       message: proofRequest.message,
       sig: proofRequest.rawSignature as Hex,
-      k: 15
     })
   }, [isWorkerReady, proofRequest])
 }
 ```
 
-## Verify of Membership
+## Membership Verification
 
 After successfully generating the Halo2 proof, you can proceed with verifying that proof in Halo2. Follow these steps:
 
-1. Ensure you have the `membershipProofSerialized` output from the proof of membership step.
-2. Specify the polynomial degree K for running the circuit (e.g., default: 15). This must be the same degree used in the proof of membership step.
+- Ensure you have the `membershipProofSerialized` output from the proof of membership step.
 
 ```js
 export interface VerifyInputs {
-  membershipProofSerialized: Uint8Array,
-  k: number
+anonklubProof: Uint8Array
 }
 ```
 
@@ -257,10 +201,77 @@ export const useVerifyProof = () => {
   return useAsync(async () => {
     if (proof === null) return;
 
-    return await verifyMembership({
-      membershipProofSerialized: proof,
-      k: 15,
-    });
+    return await verifyMembership(proof);
   }, [proof]);
 };
 ```
+
+## Benchmarks
+
+### Overview
+
+This benchmarking process evaluates the relationship between the parameter `k` and the performance metrics such as a proof generation time, proof size, and verification time. The results are stored in a CSV file and visualized using plots.
+
+### Setup
+
+Before running the benchmarks, ensure that your Rust environment is set up correctly and that the appropriate target is configured.
+
+#### Configuring the Rust Target
+
+This benchmarking process is intended to run on a native Linux target, not on WebAssembly (WASM). The project uses a specific Rust toolchain version.
+
+1. Set Up the Rust Toolchain:
+   Ensure to use the same nightly Rust version in the `rust-toolchain`.
+
+```rs
+[toolchain]
+channel = "nightly-2024-07-25"
+```
+
+2. Check the Installed Targets:
+   You can check which targets are installed in your Rust toolchain with:
+
+```bash
+rustup target list --installed
+```
+
+3. Add the Required Target:
+   If the `x86_64-unknown-linux-gnu` target is not installed, you can add it with:
+
+```bash
+rustup target add x86_64-unknown-linux-gnu
+```
+
+4. Run the Benchmark:
+   Ensure that the benchmark is run with the correct target by using the following command:
+
+```bash
+cargo test --target x86_64-unknown-linux-gnu --features "bench"
+```
+
+### Results
+
+The benchmark results were obtained on `Lenovo Legion 5` running Linux (12 CPU cores, 62 GB RAM) -- no GPU was used.
+
+| k  | numAdvice | numLookupAdvice | numInstance | numLookupBits | numVirtualInstance | proof_time | proof_size | verify_time |
+| -- | --------- | --------------- | ----------- | ------------- | ------------------ | ---------- | ---------- | ----------- |
+| 19 | 1         | 1               | 1           | 18            | 1                  | 176.9s     | 992        | 2.3s        |
+| 18 | 2         | 1               | 1           | 17            | 1                  | 171.1s     | 1504       | 7.6s        |
+| 17 | 4         | 1               | 1           | 16            | 1                  | 71.7s      | 2080       | 639.7ms     |
+| 16 | 8         | 2               | 1           | 15            | 1                  | 59.3s      | 3584       | 365.1ms     |
+| 15 | 17        | 3               | 1           | 14            | 1                  | 51.2s      | 6592       | 267.6ms     |
+| 14 | 34        | 6               | 1           | 13            | 1                  | 51.6s      | 12736      | 283.8ms     |
+| 13 | 68        | 12              | 1           | 12            | 1                  | 52.5s      | 25024      | 411.5ms     |
+| 12 | 139       | 24              | 1           | 11            | 1                  | 58.3s      | 50528      | 761.7ms     |
+| 11 | 291       | 53              | 1           | 10            | 1                  | 72.4s      | 106304     | 1.5s        |
+
+> Note: those benchmark config parameters have been selected based on `halo2-lib` benchmark params [github.com/axiom-crypto/halo2-lib](https://github.com/axiom-crypto/halo2-lib?tab=readme-ov-file#secp256k1-ecdsa)
+
+The benchmark results are visualized in the plot below:
+
+![Benchmark Plot](pkgs/halo2-eth-membership/configs//benchmark_plot.png)
+
+### Results using `criterion.rs`
+
+TODO
+
