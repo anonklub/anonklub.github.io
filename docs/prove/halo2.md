@@ -73,7 +73,6 @@ export const useHalo2EthMembershipWorker = () => {
     sig,
     message,
     merkleProofBytesSerialized,
-    k
   }): Promise<Uint8Array> => {
     process.env.NODE_ENV === 'development' && console.time('==> Prove')
 
@@ -88,16 +87,10 @@ export const useHalo2EthMembershipWorker = () => {
     return proof
   }
 
-  const verifyMembership: VerifyMembershipFn = async ({
-    membershipProofSerialized,
-    k
-  }): Promise<boolean> => {
+  const verifyMembership: VerifyMembershipFn = async ({ membershipProofSerialized  }): Promise<boolean> => {
     process.env.NODE_ENV === 'development' && console.time('==> Verify')
 
-    const isVerified = await Halo2EthMembershipWorker.verifyMembership({
-      membershipProofSerialized,
-      k
-    })
+    const isVerified = await Halo2EthMembershipWorker.verifyMembership({ membershipProofSerialized })
 
     process.env.NODE_ENV === 'development' && console.timeEnd('==> Verify')
 
@@ -116,14 +109,14 @@ export const useHalo2EthMembershipWorker = () => {
 
 ### Prepare
 
-[@anonklub/halo2-binary-merkle-tree-worker](https://www.npmjs.com/package/@anonklub/halo2-binary-merkle-tree-worker) and [@anonklub/halo2-eth-membership-worker](https://www.npmjs.com/package/@anonklub/halo2-eth-membership-worker) are designed to operate on the client side. In the example above, ensure that you run prepare from each worker using `await worker.prepare()`. Please check [`Wasm & Web-Workers`](https://anonklub.github.io/#/prove/wasm) doc for more details.
+[@anonklub/halo2-binary-merkle-tree-worker](https://www.npmjs.com/package/@anonklub/halo2-binary-merkle-tree-worker) and [@anonklub/halo2-eth-membership-worker](https://www.npmjs.com/package/@anonklub/halo2-eth-membership-worker) are designed to operate on the client side. In the example above, ensure that you prepare each worker using `await worker.prepare()`. Please check [`Wasm & Web-Workers`](https://anonklub.github.io/#/prove/wasm) doc for more details.
 
 ## Merkle Proof
 
 Generating a Merkle proof to verify the inclusion of an Ethereum address within a Merkle tree is crucial for the circuit's functionality. We use a binary Merkle tree structure, and the `@anonklub/halo2-binary-merkle-tree-worker` library provides a [gadget](https://zcash.github.io/halo2/concepts/gadgets.html) that serves as a constraint for verifying the Merkle proof within the circuit. Follow these steps to generate a Merkle proof:
 
 1. Call the `prepare()` function as previously described.
-2. Prepare the list of Ethereum addresses. The Anonklub project can assist in scanning the blockchain to create this list, check out [query docs](https://anonklub.github.io/#/apis?id=query).
+2. Prepare the list of Ethereum addresses. The Anonklub project can assist in building this list by querying services that serve indexed blockchain data, check out [query docs](https://anonklub.github.io/#/apis?id=query).
 3. Define the parameters needed to generate the Merkle proof, including the number of `leaves` in the tree, the tree's `depth` (e.g., default: 15), and the specific `leaf` (address) for which you want to prove membership.
 4. The generated proof will be serialized, making it immediately usable as a parameter for the proof function in the circuit.
 
@@ -267,9 +260,13 @@ The benchmark results were obtained on `Lenovo Legion 5` running Linux (12 CPU c
 
 > Note: those benchmark config parameters have been selected based on `halo2-lib` benchmark params [github.com/axiom-crypto/halo2-lib](https://github.com/axiom-crypto/halo2-lib?tab=readme-ov-file#secp256k1-ecdsa)
 
+Based on these benchmark results, we choose to use KZG params with `K = 14`. Here, `K` refers to the degree of the polynomial or the size of the circuit size, where \(2^K\) represents the number of constraints. For `K = 14`, this corresponds to a circuit with `16,384` constraints/rows, that offers the best trede-off between proof speed, verification time and proof size. 
+
+KZG params are the precomputed values used in the [**Kate-Zaverucha-Goldberg (KZG) polynomial commitment scheme**](https://dankradfeist.de/ethereum/2020/06/16/kate-polynomial-commitments.html), which enables efficient proof generation and verification in Halo2. The KZG parameters vary with `K` to optimize for different circuit sizes.
+
 The benchmark results are visualized in the plot below:
 
-![Benchmark Plot](pkgs/halo2-eth-membership/configs//benchmark_plot.png)
+![Benchmark Plot](https://github.com/anonklub/anonklub/blob/main/pkgs/halo2-eth-membership/configs/benchmark_plot.png?raw=true)
 
 ### Results using `criterion.rs`
 

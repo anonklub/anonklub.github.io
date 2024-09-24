@@ -112,7 +112,7 @@ export const useSpartanEcdsaWorker = () => {
 Generating a Merkle proof to verify the inclusion of an Ethereum address within a Merkle tree is crucial for the circuit's functionality. We use a binary Merkle tree structure `@anonklub/merkle-tree-worker` library in case of Spartan circuits. Follow these steps to generate a Merkle proof:
 
 1. Call the `prepare()` function as previously described.
-2. Prepare the list of Ethereum addresses. The Anonklub project can assist in scanning the blockchain to create this list, check out [query docs](https://anonklub.github.io/#/apis?id=query).
+2. Prepare the list of Ethereum addresses. The Anonklub project can assist in building this list by querying services that serve indexed blockchain data, check out [query docs](https://anonklub.github.io/#/apis?id=query).
 3. Define the parameters needed to generate the Merkle proof, including the number of `leaves` in the tree, the tree's `depth` (e.g., default: 15), and the specific `leaf` (address) for which you want to prove membership.
 4. The generated proof will be serialized, making it immediately usable as a parameter for the proof function in the circuit.
 
