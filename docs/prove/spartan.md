@@ -8,8 +8,6 @@
 
 ## TLDR
 
-### 
-
 ```js
 // React.js / Next.js example
 import { type ProveMembershipFn, SpartanEcdsaWorker, type VerifyMembershipFn } from '@anonklub/spartan-ecdsa-worker'
@@ -146,9 +144,35 @@ export interface ProveInputs {
 import { useAsync } from 'react-use'
 import type { Hex } from 'viem'
 import { useSpartanEcdsaWorker } from './useSpartanEcdsaWorker'
-import { useStore } from './useStore'
+// useStore is a custom React hook for managing global state in the application
+// using the `easy-peasy` state management library.`
+//
+// Hook Path: `@hook` alias points to `src/hooks` for convenient imports.//
+//
+// `easy-peasy`: https://github.com/ctrlplusb/easy-peasy
+// 
+// For more detailed info you can refer to the full source code here:: 
+// https://github.com/anonklub/anonklub/blob/main/ui/src/hooks/useStore.ts
+import { useStore } from '@/hooks/useStore' 
 
 export const useProofResult = () => {
+   // proofRequest is an object that holds the parameters required to generate, 
+  // that is stored in the `useStore()` hook. 
+  // 
+  // In the example below the params needed for generating a halo2 proof are:
+  //  1. `merkleProof: Uint8Array` in a serialized version. 
+  //  2. `message: string` the message to be signed.
+  //  3. `rawSignature: string` the user signature on the message.
+  // For more info on how to generate those params as example please refer to:
+  // Source code: https://github.com/anonklub/anonklub/blob/main/ui/src/hooks/useProofRequest.ts
+  // Please note that the referred example was for Halo2 but in case of Spartan remember to use
+  // `@anonklub/merkle-tree-worker` modules instead of `@anonklub/halo2-binary-merkle-tree-worker` 
+  // as stated here in this custom react hook example:
+  // `useMerkleTreeWasmWorker`: https://github.com/anonklub/anonklub/blob/main/ui/src/hooks/useMerkleTreeWorker.ts
+  // 
+  // For more detailed information on proof requests,
+  // refer to the @anonklub/proof documentation: https://anonklub.github.io/#/prove/circom?id=create-proof-request
+  // refer to source code: https://github.com/anonklub/anonklub/blob/6884d934f95f2c153bd9531aca36ba7a6e6d4720/pkgs/proof/src/ProofRequest.ts
   const { proofRequest } = useStore()
   const { isWorkerReady, proveMembership } = useSpartanEcdsaWorker()
 
@@ -181,7 +205,16 @@ anonklubProof: Uint8Array
 ```js
 import { useAsync } from 'react-use';
 import { useSpartanEcdsaWorker } from './useSpartanEcdsaWorker';
-import { useStore } from './useStore';
+// useStore is a custom React hook for managing global state in the application
+// using the `easy-peasy` state management library.`
+//
+// Hook Path: `@hook` alias points to `src/hooks` for convenient imports.//
+//
+// `easy-peasy`: https://github.com/ctrlplusb/easy-peasy
+//
+// For more detailed info you can refer to the full source code here::
+// https://github.com/anonklub/anonklub/blob/main/ui/src/hooks/useStore.ts
+import { useStore } from '@/hooks/useStore';
 
 export const useVerifyProof = () => {
   const { proof } = useStore();

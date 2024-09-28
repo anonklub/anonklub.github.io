@@ -7,8 +7,6 @@
 
 ## TLDR
 
-### 
-
 ```js
 // React.js / Next.js example
 import {
@@ -87,10 +85,10 @@ export const useHalo2EthMembershipWorker = () => {
     return proof
   }
 
-  const verifyMembership: VerifyMembershipFn = async ({ membershipProofSerialized  }): Promise<boolean> => {
+  const verifyMembership: VerifyMembershipFn = async (proof): Promise<boolean> => {
     process.env.NODE_ENV === 'development' && console.time('==> Verify')
 
-    const isVerified = await Halo2EthMembershipWorker.verifyMembership({ membershipProofSerialized })
+    const isVerified = await Halo2EthMembershipWorker.verifyMembership(proof)
 
     process.env.NODE_ENV === 'development' && console.timeEnd('==> Verify')
 
@@ -150,9 +148,31 @@ export interface ProveInputs {
 import { useAsync } from 'react-use'
 import type { Hex } from 'viem'
 import { useHalo2EthMembershipWorker } from '@/hooks/useHalo2EthMembershipWorker'
-import { useStore } from '@/hooks/useStore'
+// useStore is a custom React hook for managing global state in the application
+// using the `easy-peasy` state management library.`
+//
+// Hook Path: `@hook` alias points to `src/hooks` for convenient imports.//
+//
+// `easy-peasy`: https://github.com/ctrlplusb/easy-peasy
+// 
+// For more detailed info you can refer to the full source code here:: 
+// https://github.com/anonklub/anonklub/blob/main/ui/src/hooks/useStore.ts
+import { useStore } from '@/hooks/useStore' 
 
 export const useProofResult = () => {
+  // proofRequest is an object that holds the parameters required to generate, 
+  // that is stored in the `useStore()` hook. 
+  // 
+  // In the example below the params needed for generating a halo2 proof are:
+  //  1. `merkleProof: Uint8Array` in a serialized version. 
+  //  2. `message: string` the message to be signed.
+  //  3. `rawSignature: string` the user signature on the message.
+  // For more info on how to generate those params as example please refer to:
+  // Source code: https://github.com/anonklub/anonklub/blob/main/ui/src/hooks/useProofRequest.ts
+  // 
+  // For more detailed information on proof requests,
+  // refer to the @anonklub/proof documentation: https://anonklub.github.io/#/prove/circom?id=create-proof-request
+  // refer to source code: https://github.com/anonklub/anonklub/blob/6884d934f95f2c153bd9531aca36ba7a6e6d4720/pkgs/proof/src/ProofRequest.ts
   const { proofRequest } = useStore()
   const { isWorkerReady, proveMembership } = useHalo2EthMembershipWorker()
 
@@ -184,8 +204,17 @@ anonklubProof: Uint8Array
 
 ```js
 import { useHalo2EthMembershipWorker } from '@/hooks/useHalo2EthMembershipWorker';
-import { useStore } from '@/hooks/useStore';
 import { useAsync } from 'react-use';
+// useStore is a custom React hook for managing global state in the application
+// using the `easy-peasy` state management library.`
+//
+// Hook Path: `@hook` alias points to `src/hooks` for convenient imports.//
+//
+// `easy-peasy`: https://github.com/ctrlplusb/easy-peasy
+//
+// For more detailed info you can refer to the full source code here::
+// https://github.com/anonklub/anonklub/blob/main/ui/src/hooks/useStore.ts
+import { useStore } from '@/hooks/useStore';
 
 export const useVerifyProof = () => {
   const { proof } = useStore();
@@ -260,7 +289,7 @@ The benchmark results were obtained on `Lenovo Legion 5` running Linux (12 CPU c
 
 > Note: those benchmark config parameters have been selected based on `halo2-lib` benchmark params [github.com/axiom-crypto/halo2-lib](https://github.com/axiom-crypto/halo2-lib?tab=readme-ov-file#secp256k1-ecdsa)
 
-Based on these benchmark results, we choose to use KZG params with `K = 14`. Here, `K` refers to the degree of the polynomial or the size of the circuit size, where \(2^K\) represents the number of constraints. For `K = 14`, this corresponds to a circuit with `16,384` constraints/rows, that offers the best trede-off between proof speed, verification time and proof size. 
+Based on these benchmark results, we choose to use KZG params with `K = 14`. Here, `K` refers to the degree of the polynomial or the size of the circuit size, where \(2^K\) represents the number of constraints. For `K = 14`, this corresponds to a circuit with `16,384` constraints/rows, that offers the best trede-off between proof speed, verification time and proof size.
 
 KZG params are the precomputed values used in the [**Kate-Zaverucha-Goldberg (KZG) polynomial commitment scheme**](https://dankradfeist.de/ethereum/2020/06/16/kate-polynomial-commitments.html), which enables efficient proof generation and verification in Halo2. The KZG parameters vary with `K` to optimize for different circuit sizes.
 
