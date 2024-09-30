@@ -151,7 +151,7 @@ import { useHalo2EthMembershipWorker } from '@/hooks/useHalo2EthMembershipWorker
 // useStore is a custom React hook for managing global state in the application
 // using the `easy-peasy` state management library.`
 //
-// Hook Path: `@hook` alias points to `src/hooks` for convenient imports.//
+// Hook Path: `@/hook` alias points to `src/hooks` for convenient imports.//
 //
 // `easy-peasy`: https://github.com/ctrlplusb/easy-peasy
 // 
@@ -164,9 +164,9 @@ export const useProofResult = () => {
   // that is stored in the `useStore()` hook. 
   // 
   // In the example below the params needed for generating a halo2 proof are:
-  //  1. `merkleProof: Uint8Array` in a serialized version. 
+  //  1. `merkleProofBytesSerialized: Uint8Array` in a serialized version. 
   //  2. `message: string` the message to be signed.
-  //  3. `rawSignature: string` the user signature on the message.
+  //  3. `sig: hex` the user signature on the message.
   // For more info on how to generate those params as example please refer to:
   // Source code: https://github.com/anonklub/anonklub/blob/main/ui/src/hooks/useProofRequest.ts
   // 
@@ -195,9 +195,7 @@ After successfully generating the Halo2 proof, you can proceed with verifying th
 - Ensure you have the `membershipProofSerialized` output from the proof of membership step.
 
 ```js
-export interface VerifyInputs {
-anonklubProof: Uint8Array
-}
+export type VerifyInputs = Uint8Array
 ```
 
 ### Example of use
@@ -208,7 +206,7 @@ import { useAsync } from 'react-use';
 // useStore is a custom React hook for managing global state in the application
 // using the `easy-peasy` state management library.`
 //
-// Hook Path: `@hook` alias points to `src/hooks` for convenient imports.//
+// Hook Path: `@/hook` alias points to `src/hooks` for convenient imports.//
 //
 // `easy-peasy`: https://github.com/ctrlplusb/easy-peasy
 //

@@ -147,7 +147,7 @@ import { useSpartanEcdsaWorker } from './useSpartanEcdsaWorker'
 // useStore is a custom React hook for managing global state in the application
 // using the `easy-peasy` state management library.`
 //
-// Hook Path: `@hook` alias points to `src/hooks` for convenient imports.//
+// Hook Path: `@/hook` alias points to `src/hooks` for convenient imports.//
 //
 // `easy-peasy`: https://github.com/ctrlplusb/easy-peasy
 // 
@@ -156,7 +156,7 @@ import { useSpartanEcdsaWorker } from './useSpartanEcdsaWorker'
 import { useStore } from '@/hooks/useStore' 
 
 export const useProofResult = () => {
-   // proofRequest is an object that holds the parameters required to generate, 
+  // proofRequest is an object that holds the parameters required to generate, 
   // that is stored in the `useStore()` hook. 
   // 
   // In the example below the params needed for generating a halo2 proof are:
@@ -208,7 +208,7 @@ import { useSpartanEcdsaWorker } from './useSpartanEcdsaWorker';
 // useStore is a custom React hook for managing global state in the application
 // using the `easy-peasy` state management library.`
 //
-// Hook Path: `@hook` alias points to `src/hooks` for convenient imports.//
+// Hook Path: `@/hook` alias points to `src/hooks` for convenient imports.//
 //
 // `easy-peasy`: https://github.com/ctrlplusb/easy-peasy
 //
