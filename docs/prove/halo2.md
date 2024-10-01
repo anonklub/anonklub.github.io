@@ -105,6 +105,12 @@ export const useHalo2EthMembershipWorker = () => {
 
 ## Step By Step
 
+> The examples are based on the [AnonKlub UI implementation](https://github.com/anonklub/anonklub/tree/main/ui), which especially features:
+>
+> - a TypeScript alias named `@hooks`
+> - global state management with an [`easy-peasy`](https://easy-peasy.dev/) store
+> - description of the parameters required to generate the proof with the `ProofRequest` object from [`@anonklub/proof`](https://www.npmjs.com/package/@anonklub/proof?activeTab=code) (see also [circom/Create a Proof Request](https://anonklub.github.io/#/prove/circom?id=create-proof-request))
+
 ### Prepare
 
 [@anonklub/halo2-binary-merkle-tree-worker](https://www.npmjs.com/package/@anonklub/halo2-binary-merkle-tree-worker) and [@anonklub/halo2-eth-membership-worker](https://www.npmjs.com/package/@anonklub/halo2-eth-membership-worker) are designed to operate on the client side. In the example above, ensure that you prepare each worker using `await worker.prepare()`. Please check [`Wasm & Web-Workers`](https://anonklub.github.io/#/prove/wasm) doc for more details.
@@ -114,7 +120,7 @@ export const useHalo2EthMembershipWorker = () => {
 Generating a Merkle proof to verify the inclusion of an Ethereum address within a Merkle tree is crucial for the circuit's functionality. We use a binary Merkle tree structure, and the `@anonklub/halo2-binary-merkle-tree-worker` library provides a [gadget](https://zcash.github.io/halo2/concepts/gadgets.html) that serves as a constraint for verifying the Merkle proof within the circuit. Follow these steps to generate a Merkle proof:
 
 1. Call the `prepare()` function as previously described.
-2. Prepare the list of Ethereum addresses. The Anonklub project can assist in building this list by querying services that serve indexed blockchain data, check out [query docs](https://anonklub.github.io/#/apis?id=query).
+2. Prepare the list of Ethereum. The Anonklub project can assist in building this list by querying services that serve indexed blockchain data, check out [query docs](https://anonklub.github.io/#/apis?id=query).
 3. Define the parameters needed to generate the Merkle proof, including the number of `leaves` in the tree, the tree's `depth` (e.g., default: 15), and the specific `leaf` (address) for which you want to prove membership.
 4. The generated proof will be serialized, making it immediately usable as a parameter for the proof function in the circuit.
 
@@ -126,13 +132,14 @@ export type GenerateMerkleProofFn = (
 ) => Promise<Uint8Array>
 ```
 
-## Proof of Membership
+## Membership Proof
 
 Once you have generated the Merkle proof for an Ethereum address (leaf), you can proceed to create a Halo2 proof for the membership of that address in the Merkle tree. Follow these steps to generate a Halo2 membership proof:
 
 1. Call the `prepare()` function as outlined earlier.
-2. Sign a `message`and obtain the `signature` in hexadecimal format.
-3. The generated Halo2 membership proof `membershipProofSerialized` is in a serialized form and it will be ready for immediate use in the `verifyMembership()` function.
+2. Sign a `message`and obtain the signature `sig` in hexadecimal format.
+3. Pass `message`, `sig` and the previously generated merkle proof `merkleProofBytesSerialized` as parameters to [`proveMembership`](https://github.com/anonklub/anonklub/blob/6884d934f95f2c153bd9531aca36ba7a6e6d4720/pkgs/halo2-eth-membership-worker/src/worker.ts#L37)
+4. The generated Halo2 membership proof is serialized in a format (`Uint8Array`) appropriate for [verification](#membership-verification) purposes.
 
 ```js
 export interface ProveInputs {
@@ -147,32 +154,10 @@ export interface ProveInputs {
 ```js
 import { useAsync } from 'react-use'
 import type { Hex } from 'viem'
-import { useHalo2EthMembershipWorker } from '@/hooks/useHalo2EthMembershipWorker'
-// useStore is a custom React hook for managing global state in the application
-// using the `easy-peasy` state management library.`
-//
-// Hook Path: `@/hook` alias points to `src/hooks` for convenient imports.//
-//
-// `easy-peasy`: https://github.com/ctrlplusb/easy-peasy
-// 
-// For more detailed info you can refer to the full source code here:: 
-// https://github.com/anonklub/anonklub/blob/main/ui/src/hooks/useStore.ts
-import { useStore } from '@/hooks/useStore' 
+import { useHalo2EthMembershipWorker } from '@hooks/useHalo2EthMembershipWorker'
+import { useStore } from '@hooks/useStore' 
 
 export const useProofResult = () => {
-  // proofRequest is an object that holds the parameters required to generate, 
-  // that is stored in the `useStore()` hook. 
-  // 
-  // In the example below the params needed for generating a halo2 proof are:
-  //  1. `merkleProofBytesSerialized: Uint8Array` in a serialized version. 
-  //  2. `message: string` the message to be signed.
-  //  3. `sig: hex` the user signature on the message.
-  // For more info on how to generate those params as example please refer to:
-  // Source code: https://github.com/anonklub/anonklub/blob/main/ui/src/hooks/useProofRequest.ts
-  // 
-  // For more detailed information on proof requests,
-  // refer to the @anonklub/proof documentation: https://anonklub.github.io/#/prove/circom?id=create-proof-request
-  // refer to source code: https://github.com/anonklub/anonklub/blob/6884d934f95f2c153bd9531aca36ba7a6e6d4720/pkgs/proof/src/ProofRequest.ts
   const { proofRequest } = useStore()
   const { isWorkerReady, proveMembership } = useHalo2EthMembershipWorker()
 
@@ -193,6 +178,7 @@ export const useProofResult = () => {
 After successfully generating the Halo2 proof, you can proceed with verifying that proof in Halo2. Follow these steps:
 
 - Ensure you have the `membershipProofSerialized` output from the proof of membership step.
+- Pass it as argument to [`verifyMembership`](https://github.com/anonklub/anonklub/blob/6884d934f95f2c153bd9531aca36ba7a6e6d4720/pkgs/halo2-eth-membership-worker/src/worker.ts#L56)
 
 ```js
 export type VerifyInputs = Uint8Array
@@ -201,18 +187,9 @@ export type VerifyInputs = Uint8Array
 ### Example of use
 
 ```js
-import { useHalo2EthMembershipWorker } from '@/hooks/useHalo2EthMembershipWorker';
+import { useHalo2EthMembershipWorker } from '@hooks/useHalo2EthMembershipWorker';
 import { useAsync } from 'react-use';
-// useStore is a custom React hook for managing global state in the application
-// using the `easy-peasy` state management library.`
-//
-// Hook Path: `@/hooks` alias points to `src/hooks` for convenient imports.//
-//
-// `easy-peasy`: https://github.com/ctrlplusb/easy-peasy
-//
-// For more detailed info you can refer to the full source code here::
-// https://github.com/anonklub/anonklub/blob/main/ui/src/hooks/useStore.ts
-import { useStore } from '@/hooks/useStore';
+import { useStore } from '@hooks/useStore';
 
 export const useVerifyProof = () => {
   const { proof } = useStore();
