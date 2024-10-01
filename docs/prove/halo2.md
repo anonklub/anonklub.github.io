@@ -206,7 +206,7 @@ import { useAsync } from 'react-use';
 // useStore is a custom React hook for managing global state in the application
 // using the `easy-peasy` state management library.`
 //
-// Hook Path: `@/hook` alias points to `src/hooks` for convenient imports.//
+// Hook Path: `@/hooks` alias points to `src/hooks` for convenient imports.//
 //
 // `easy-peasy`: https://github.com/ctrlplusb/easy-peasy
 //
